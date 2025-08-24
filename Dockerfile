@@ -17,4 +17,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN python manage.py collectstatic --noinput
+# 3. Запуск gunicorn (Django через WSGI)
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
