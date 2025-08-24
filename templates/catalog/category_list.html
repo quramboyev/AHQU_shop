@@ -1,0 +1,24 @@
+{% load static %}
+
+{% block content %}
+<div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="catalogOffcanvas" aria-labelledby="catalogOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="catalogOffcanvasLabel">Каталог</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+  </div>
+  <div class="offcanvas-body">
+    <ul class="list-unstyled">
+      {% for category in categories %}
+        <li>
+          <a href="{% url 'catalog:product_list_by_category' category.id %}" class="text-light d-block py-2">
+            {{ category.name }}
+          </a>
+        </li>
+      {% empty %}
+        <li class="text-muted">Категории не найдены</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

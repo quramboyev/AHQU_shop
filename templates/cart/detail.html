@@ -1,0 +1,63 @@
+{% load static %}
+
+{% block extra_css %}
+<style>
+        body { font-family: sans-serif; background: #fafafa; margin: 0; padding: 0; }
+        .cart-container { display: flex; gap: 20px; padding: 20px; }
+        .cart-items { flex: 2; background: #fff; padding: 20px; border-radius: 10px; }
+        .cart-summary { flex: 1; background: #fff; padding: 20px; border-radius: 10px; }
+        .cart-item { display: flex; align-items: center; border-bottom: 1px solid #eee; padding: 15px 0; }
+        .cart-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 15px; }
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-weight: bold; }
+        .cart-item-seller { color: #666; font-size: 14px; margin: 4px 0; }
+        .cart-item-price { font-size: 18px; font-weight: bold; color: #6a0dad; }
+        .quantity-control { display: flex; align-items: center; gap: 5px; }
+        .quantity-btn { border: 1px solid #ccc; background: #fff; padding: 3px 8px; cursor: pointer; }
+        .delete-btn { color: gray; cursor: pointer; margin-left: 10px; }
+        .summary-total { font-size: 18px; font-weight: bold; margin-top: 10px; }
+        .checkout-btn { display: block; width: 100%; background: #7a00ff; color: #fff; border: none; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 20px; }
+        .checkout-btn:hover { background: #5b00cc; }
+    </style>
+{% endblock %}
+
+{% block content %}
+<h2>Ваша корзина</h2>
+<div class="cart-container">
+    <!-- Список товаров -->
+    <div class="cart-items">
+        {% if cart.items.all %}
+            {% for item in cart.items.all %}
+            <div class="cart-item">
+                <input type="checkbox" checked>
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                <div class="cart-item-info">
+                    <div class="cart-item-name">{{ item.product.name }}</div>
+                    <div class="cart-item-seller">Продавец: {{ item.product.seller }}</div>
+                    <div class="quantity-control">
+                        <button class="quantity-btn">−</button>
+                        {{ item.quantity }}
+                        <button class="quantity-btn">+</button>
+                        <span class="delete-btn">🗑 Удалить</span>
+                    </div>
+                </div>
+                <div class="cart-item-price">{{ item.product.price }} сум</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>Ваша корзина пуста</p>
+        {% endif %}
+    </div>
+
+    <!-- Сводка заказа -->
+    <div class="cart-summary">
+        <h3>Ваш заказ</h3>
+        <p>Товары ({{ cart.items.count }}): {{ cart.total_price }} сум</p>
+        <div class="summary-total">Итого: {{ cart.total_price }} сум</div>
+        <form method="post" action="{% url 'orders:create_order' %}">
+            {% csrf_token %}
+            <button type="submit" class="checkout-btn">Перейти к оформлению</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
